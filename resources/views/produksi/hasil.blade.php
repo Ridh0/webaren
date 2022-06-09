@@ -13,16 +13,12 @@
                     Data Produksi
                 </div>
                 <div class="p-2 bd-highlight">
-                    <a class="btn btn-primary btn-sm float-right" href="{{route('produksi.create')}}">
+                    <a class="btn btn-primary btn-sm float-right" href="{{route('produksi.hasil.tambah')}}">
                         <span class="fas fa-table me-1"></span>
                         Tambah Data
                     </a>
                 </div>
-                <div class="p-2 bd-highlight">
-                    <a class="btn btn-primary btn-sm" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
-                        Link with href
-                    </a>
-                </div>
+
             </div>
 
         </div>
@@ -60,38 +56,36 @@
             <table id="datatablesSimple" class=" table display cell-border" width="100%">
                 <thead>
                     <tr class="table bg-dark text-white">
-                        <th scope="col">No <small>Urutan</small></th>
-                        <th scope="col">Tanggal</th>
-                        <th scope="col">Nomor WO</th>
-                        <th scope="col">AJ</th>
-                        <th scope="col">AR</th>
-                        <th scope="col">GP</th>
-                        <th scope="col">GT</th>
-                        <th scope="col">T-OI</th>
-                        <th scope="col">K</th>
-                        <th scope="col">T-JAWA</th>
-                        <th scope="col">R/BS</th>
+                        <th scope="col">No</th>
+                        <th scope="col">NWO</th>
+                        <th scope="col">AR-25</th>
+                        <th scope="col">AR-5</th>
+                        <th scope="col">AR-1</th>
+                        <th scope="col">RG-25</th>
+                        <th scope="col">RG-5</th>
+                        <th scope="col">RG-1</th>
+                        <th scope="col">RG-K-1</th>
+
                     </tr>
                 </thead>
                 <tbody>
 
-                    @foreach($produksi as $row)
+                    @foreach($produksii as $row)
                     <?php
                     $n = date('Y-m-d', strtotime($row->created_at . " +1 days"));
                     ?>
                     <tr>
 
                         <th scope="row">{{ $loop->iteration}}</th>
-                        <td>{{ $row ->created_at }}</td>
-                        <td>{{ $row->nwo}}</td>
-                        <td>{{ $row->aj}}</td>
-                        <td>{{ $row->ar}}</td>
-                        <td>{{ $row->gp}}</td>
-                        <td>{{ $row->gt}}</td>
-                        <td>{{ $row->toi}}</td>
-                        <td>{{ $row->k}}</td>
-                        <td>{{ $row->tjawa}}</td>
-                        <td>{{ $row->rbs}}</td>
+                        <td>{{ $row->produksi->nwo }}</td>
+                        <td>{{ $row->ar25 }}</td>
+                        <td>{{ $row->ar5}}</td>
+                        <td>{{ $row->ar1}}</td>
+                        <td>{{ $row->rg25}}</td>
+                        <td>{{ $row->rg5}}</td>
+                        <td>{{ $row->rg1}}</td>
+                        <td>{{ $row->rgk1}}</td>
+
                     </tr>
                     @endforeach
                 </tbody>
@@ -99,4 +93,5 @@
         </div>
     </div>
 </div>
+
 @endsection

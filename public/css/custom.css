@@ -1,0 +1,87 @@
+.sb-sidenav-light .sb-sidenav-menu .nav-link.active {
+    color: #ffffff;
+    background-color: #b05213;
+    border-radius: 0px 20px 20px 0px;
+}
+
+.sb-sidenav-light .sb-sidenav-menu {
+    display: inline;
+    list-style: none;
+    padding-right: 30px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-size: 1rem;
+    border-radius: 20px 20px 0px 0px;
+    position: relative;
+}
+.sb-sidenav-light .sb-sidenav-menu .nav-link:focus {
+    color: #ffffff;
+}
+.sb-sidenav-light .sb-sidenav-menu .nav-link .sb-nav-link-icon {
+    color: #b05213;
+}
+.sb-sidenav-light .sb-sidenav-menu .nav-link:focus .sb-nav-link-icon {
+    color: #ffffff;
+}
+.sb-sidenav-light .sb-sidenav-menu .nav-link:focus .sb-sidenav-collapse-arrow {
+    color: #ffffff;
+}
+.sb-sidenav-light .sb-sidenav-menu .nav-link:hover .sb-sidenav-collapse-arrow {
+    color: #ffffff;
+}
+.sb-sidenav-light .sb-sidenav-menu .nav-link .sb-sidenav-collapse-arrow {
+    color: #b05213;
+}
+.sb-sidenav-menu-nested .sb-sidenav-light .sb-sidenav-menu .nav-link:hover {
+    border-radius: 0px 20px 20px 0px;
+    background-color: none;
+
+    color: #b05213;
+}
+.sb-sidenav-light .sb-sidenav-menu .nav-link.active .sb-nav-link-icon {
+    
+    color: #ffffff;
+}
+.sb-sidenav-light .sb-sidenav-menu .nav-link:hover {
+    border-radius: 0px 20px 20px 0px;
+    background-color: #b05213;
+    color: #ffffff;
+}
+.sb-sidenav-light .sb-sidenav-menu .nav-link2:hover {
+    border-radius: 0px 20px 20px 0px;
+    background-color :#b05213;
+    padding-left:15px;
+    color: #ffffff;
+}
+.nav-link:hover, .nav-link:focus {
+    border-radius: 0px 20px 20px 0px;
+    background-color: #b05213;
+    color: #b05213;
+}
+.nav-link2 {
+    margin-top: 5px;
+    display: block;
+    color: #000000;
+    text-decoration: none;
+    transition: color 0.15s ease-in-out, padding-left 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+}
+.sb-sidenav .sb-sidenav-menu .nav .nav-link {
+    display: flex;
+    border-radius: 0px 20px 20px 0px;
+
+    align-items: center;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    position: relative;
+}
+.sb-sidenav .sb-sidenav-menu .nav .nav-link2 {
+    display: flex;
+    border-radius: 0px 20px 20px 0px;
+    align-items: center;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    position: relative;
+}
+.sb-sidenav-light .sb-sidenav-menu .nav-link:hover .sb-nav-link-icon {
+    color: #ffffff;
+}

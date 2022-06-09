@@ -143,6 +143,13 @@ class ProduksiController extends Controller
         return view('produksi.rekap',compact('a'));
 
     }
+    public function rekap_bulanan()
+    {
+
+        $month = date('F, Y');
+        $a =  Produksi_Detail::where('created_at', 'like', "%" . $month . "%")->with('produksi')->with('inventori')->get();
+        return view('produksi.rekap', compact('a'));
+    }
     
     public function rekaps($produksis)
     {

@@ -57,41 +57,28 @@
                     </form>
                 </div>
             </div>
-            <table id="datatablesSimple" class=" table display cell-border" width="100%">
+
+            <table id="datatablesSimple" class="table" width="100%">
                 <thead>
                     <tr class="table bg-dark text-white">
-                        <th scope="col">No <small>Urutan</small></th>
+                        <th scope="col">Urutan Masak</th>
                         <th scope="col">Tanggal</th>
                         <th scope="col">Nomor WO</th>
-                        <th scope="col">AJ</th>
-                        <th scope="col">AR</th>
-                        <th scope="col">GP</th>
-                        <th scope="col">GT</th>
-                        <th scope="col">T-OI</th>
-                        <th scope="col">K</th>
-                        <th scope="col">T-JAWA</th>
-                        <th scope="col">R/BS</th>
+
                     </tr>
                 </thead>
                 <tbody>
 
-                    @foreach($produksi as $row)
+                    @foreach($a as $row)
                     <?php
                     $n = date('Y-m-d', strtotime($row->created_at . " +1 days"));
                     ?>
                     <tr>
 
                         <th scope="row">{{ $loop->iteration}}</th>
-                        <td>{{ $row ->created_at }}</td>
-                        <td>{{ $row->nwo}}</td>
-                        <td>{{ $row->aj}}</td>
-                        <td>{{ $row->ar}}</td>
-                        <td>{{ $row->gp}}</td>
-                        <td>{{ $row->gt}}</td>
-                        <td>{{ $row->toi}}</td>
-                        <td>{{ $row->k}}</td>
-                        <td>{{ $row->tjawa}}</td>
-                        <td>{{ $row->rbs}}</td>
+                        <td>{{ $row->inventori->name }}</td>
+                        <td>{{ $row->produksi->tanggal_masak}}</td>
+
                     </tr>
                     @endforeach
                 </tbody>
