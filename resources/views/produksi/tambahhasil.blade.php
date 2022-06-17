@@ -2,9 +2,9 @@
 
 @section('content')
 <div class="container-fluid px-4">
-    <h1 class="mt-4">Dashboard</h1>
+    <h1 class="mt-4">Tambah Hasil </h1>
     <ol class="breadcrumb mb-4">
-        <li class="breadcrumb-item active">Dashboard</li>
+        <li class="breadcrumb-item active">Tambah Hasil</li>
     </ol>
     <div class="card mb-4">
         @if (Session::has('success'))
@@ -75,11 +75,11 @@
             <form class="row g-3" action="{{route('produksi.hasil.store')}}" method="post">
                 @csrf
                 <div class="col-md-12">
-                    <label for="inputEmail4" class="form-label">Email</label>
+                    <label for="inputEmail4" class="form-label">Nwo</label>
                     <select name="produksi_id" id="inputState" class="form-control">
                         <option value="0" selected>Choose...</option>
                         @foreach ($produksi as $row)
-                        <option value="{{$row->id}}">{{$row->nwo}}</option>
+                        <option value="{{$row->id}}">{{$row->nwo}}-{{$row->id}}</option>
                         @endforeach
                     </select>
                 </div>
@@ -113,7 +113,7 @@
                     <input name="rgk1" type="text" class="form-control" placeholder="RG-K-1">
                 </div>
                 <div class="col-md-6">
-                    <label for="inputZip" class="form-label">RG-K-1</label>
+                    <label for="inputZip" class="form-label">Tekan</label>
                     <button type="submit" class="form-control btn btn-primary">Submit</button>
                 </div>
 

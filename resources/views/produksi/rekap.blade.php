@@ -62,8 +62,9 @@
                 <thead>
                     <tr class="table bg-dark text-white">
                         <th scope="col">Urutan Masak</th>
-                        <th scope="col">Tanggal</th>
                         <th scope="col">Nomor WO</th>
+                        <th scope="col">Jumlah Bahan <small>(kg)</small></th>
+                        <th scope="col">Tanggal</th>
 
                     </tr>
                 </thead>
@@ -76,8 +77,9 @@
                     <tr>
 
                         <th scope="row">{{ $loop->iteration}}</th>
-                        <td>{{ $row->inventori->name }}</td>
-                        <td>{{ $row->produksi->tanggal_masak}}</td>
+                        <td>{{ $row->nwo }}</td>
+                        <td>{{ $row->jmlbahan }}</td>
+                        <td>{{ $row->created_at}}</td>
 
                     </tr>
                     @endforeach

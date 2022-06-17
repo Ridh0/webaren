@@ -139,13 +139,19 @@ class ProduksiController extends Controller
     public function rekap_harian()
     {
         $today = date('Y-m-d');
-        $a =  Produksi_Detail::where('created_at','like',"%".$today."%" )->with('produksi')->with('inventori')->get();
+        $a= DB::table('produksi')
+        ->select('nwo', DB::raw('SUM(jmlbahan) as total_bahan'))
+        ->groupBy('nwo')
+        ->havingRaw('SUM(jmlbahan) > ?', [25])
+        ->get();
+        dd($a);
+        $a =  Produksi::where('created_at','like',"%".$today."%" )->get();
         return view('produksi.rekap',compact('a'));
 
     }
     public function rekap_bulanan()
     {
-
+       
         $month = date('F, Y');
         $a =  Produksi_Detail::where('created_at', 'like', "%" . $month . "%")->with('produksi')->with('inventori')->get();
         return view('produksi.rekap', compact('a'));
@@ -170,7 +176,7 @@ class ProduksiController extends Controller
     {
         $validator = Validator::make($request->all(),[
             'moreFields.*.id_user' => 'required',
-            'moreFields.*.nwo' => 'nullable|unique:produksi',
+            'moreFields.*.nwo' => 'nullable',
             'moreFields.*.aj' => 'nullable',
             'moreFields.*.ar' => 'nullable',
             'moreFields.*.gp' => 'nullable',

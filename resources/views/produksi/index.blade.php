@@ -20,7 +20,7 @@
                 </div>
                 <div class="p-2 bd-highlight">
                     <a class="btn btn-primary btn-sm" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
-                        Link with href
+                       Cetak
                     </a>
                 </div>
             </div>
@@ -36,13 +36,13 @@
                             <div class="col-5 my-1">
                                 <label for="formGroupExampleInput">Tanggal Mulai</label>
 
-                                <label class="sr-only" for="inlineFormInputName">Name</label>
+                                <label class="sr-only" for="inlineFormInputName">Produksi</label>
                                 <input type="date" name="from_date" class="form-control" id="inlineFormInputName" placeholder="Jane Doe">
                             </div>
                             <div class="col-5 my-1">
                                 <label for="formGroupExampleInput">Tanggal Akhir</label>
 
-                                <label class="sr-only" for="inlineFormInputGroupUsername">Username</label>
+                                <label class="sr-only" for="inlineFormInputGroupUsername">Produksi</label>
                                 <div class="input-group">
 
                                     <input type="date" name="to_date" class="form-control" id="inlineFormInputGroupUsername" placeholder="Username">
