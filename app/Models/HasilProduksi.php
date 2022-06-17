@@ -13,6 +13,7 @@ class HasilProduksi extends Model
 
     protected $fillable = [
         'produksi_id',
+        'nwo',
         'ar25',
         'ar5',
         'ar1',
@@ -20,6 +21,7 @@ class HasilProduksi extends Model
         'rg5',
         'rg1',
         'rgk1',
+        'jmlhasil',
 
     ];
 

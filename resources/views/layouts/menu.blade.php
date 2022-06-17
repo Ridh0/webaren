@@ -16,6 +16,7 @@
 <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
     <nav class="sb-sidenav-menu-nested nav">
         <a class="nav-link2" href="{{route('produksi.rekap.harian')}}">Harian</a>
+        <a class="nav-link2" href="{{route('produksi.rekap.hasil.harian')}}">Harian Hasil Produksi</a>
         <a class="nav-link2" href="{{route('produksi.rekap.bulanan')}}">Bulanan</a>
     </nav>
 </div>

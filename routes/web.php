@@ -22,6 +22,7 @@ Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/produksi', [App\Http\Controllers\ProduksiController::class, 'index'])->name('produksi');
 Route::get('/produksi/rekap', [App\Http\Controllers\ProduksiController::class, 'rekap'])->name('produksi.rekaps');
+Route::get('/produksi/hasil/rekap/harian', [App\Http\Controllers\ProduksiController::class, 'rekap_harian_hasil'])->name('produksi.rekap.hasil.harian');
 Route::get('/produksi/rekap/harian', [App\Http\Controllers\ProduksiController::class, 'rekap_harian'])->name('produksi.rekap.harian');
 Route::get('/produksi/rekap/bulanan', [App\Http\Controllers\ProduksiController::class, 'rekap_bulanan'])->name('produksi.rekap.bulanan');
 Route::get('/produksi/pdf', [App\Http\Controllers\ProduksiEksportController::class, 'displayReportexcel'])->name('produksi.export.pdf');;

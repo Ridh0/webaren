@@ -57,30 +57,20 @@
                     </form>
                 </div>
             </div>
-
             <table id="datatablesSimple" class="table" width="100%">
                 <thead>
                     <tr class="table bg-dark text-white">
                         <th scope="col">Urutan Masak</th>
                         <th scope="col">Nomor WO</th>
                         <th scope="col">Jumlah Bahan <small>(kg)</small></th>
-                        <th scope="col">Tanggal</th>
-
                     </tr>
                 </thead>
                 <tbody>
-
                     @foreach($a as $row)
-                    <?php
-                    $n = date('Y-m-d', strtotime($row->created_at . " +1 days"));
-                    ?>
                     <tr>
-
                         <th scope="row">{{ $loop->iteration}}</th>
                         <td>{{ $row->nwo }}</td>
-                        <td>{{ $row->jmlbahan }}</td>
-                        <td>{{ $row->created_at}}</td>
-
+                        <td>{{ $row->total_bahan }}</td>
                     </tr>
                     @endforeach
                 </tbody>

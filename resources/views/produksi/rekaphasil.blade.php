@@ -2,9 +2,9 @@
 
 @section('content')
 <div class="container-fluid px-4">
-    <h1 class="mt-4">Hasil Produksi</h1>
+    <h1 class="mt-4">Data Hasil Produksi</h1>
     <ol class="breadcrumb mb-4">
-        <li class="breadcrumb-item active">Hasil Produksi</li>
+        <li class="breadcrumb-item active">Data Hasil Produksi</li>
     </ol>
     <div class="card mb-4">
         <div class="card-header ">
@@ -13,12 +13,16 @@
                     Data Produksi
                 </div>
                 <div class="p-2 bd-highlight">
-                    <a class="btn btn-primary btn-sm float-right" href="{{route('produksi.hasil.tambah')}}">
+                    <a class="btn btn-primary btn-sm float-right" href="{{route('produksi.create')}}">
                         <span class="fas fa-table me-1"></span>
                         Tambah Data
                     </a>
                 </div>
-
+                <div class="p-2 bd-highlight">
+                    <a class="btn btn-primary btn-sm" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                        Link with href
+                    </a>
+                </div>
             </div>
 
         </div>
@@ -53,11 +57,11 @@
                     </form>
                 </div>
             </div>
-            <table id="datatablesSimple" class=" table display cell-border" width="100%">
+            <table id="datatablesSimple" class="table" width="100%">
                 <thead>
                     <tr class="table bg-dark text-white">
-                        <th scope="col">No</th>
-                        <th scope="col">NWO</th>
+                        <th scope="col">Urutan Masak</th>
+                        <th scope="col">Nomor WO</th>
                         <th scope="col">AR-25</th>
                         <th scope="col">AR-5</th>
                         <th scope="col">AR-1</th>
@@ -65,44 +69,27 @@
                         <th scope="col">RG-5</th>
                         <th scope="col">RG-1</th>
                         <th scope="col">RG-K-1</th>
-
+                        <th scope="col">Jumlah Hasil <small>(kg)</small></th>
                     </tr>
                 </thead>
                 <tbody>
-
-                    @forelse($produksii as $row)
-                    <?php
-                    $ar25 = $row->ar25 / 4;
-                    $rg25 = $row->rg25 / 4;
-                    $ar5 = $row->ar5 / 2;
-                    $rg5 = $row->rg5 / 2;
-                    $ar1 = $row->ar1;
-                    $rg1 = $row->rg1;
-                    $rgk1 = $row->rgk1;
-                    $n = date('Y-m-d', strtotime($row->created_at . " +1 days"));
-                    ?>
+                    @foreach($a as $row)
                     <tr>
-
                         <th scope="row">{{ $loop->iteration}}</th>
-                        <td>{{ $row->produksi->nwo }}</td>
-                        <td>{{ $ar25 }}</td>
-                        <td>{{ $ar5}}</td>
-                        <td>{{ $ar1}}</td>
-                        <td>{{ $rg25}}</td>
-                        <td>{{ $rg5}}</td>
-                        <td>{{ $rg1}}</td>
-                        <td>{{ $rgk1}}</td>
-
+                        <td>{{ $row->nwo }}</td>
+                        <td>{{ $row->total_ar25 }}</td>
+                        <td>{{ $row->total_ar5 }}</td>
+                        <td>{{ $row->total_ar1 }}</td>
+                        <td>{{ $row->total_rg25 }}</td>
+                        <td>{{ $row->total_rg5 }}</td>
+                        <td>{{ $row->total_rg1 }}</td>
+                        <td>{{ $row->total_rgk1 }}</td>
+                        <td>{{ $row->total }}</td>
                     </tr>
-                    @empty
-                    <tr>
-                        <td>NO data</td>
-                    </tr>
-                    @endforelse
+                    @endforeach
                 </tbody>
             </table>
         </div>
     </div>
 </div>
-
 @endsection
