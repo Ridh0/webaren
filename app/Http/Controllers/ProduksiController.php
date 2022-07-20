@@ -174,7 +174,7 @@ class ProduksiController extends Controller
         return view('produksi.rekap', compact('a'));
     }
 
-    public function rekaps($produksis)
+    public function rekaps($produksi)
     {
 
         if ($produksi == "harian") {

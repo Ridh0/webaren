@@ -80,7 +80,7 @@ return [
     |
     */
 
-    'locale' => 'en',
+    'locale' => 'id',
 
     /*
     |--------------------------------------------------------------------------
@@ -175,6 +175,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         Jimmyjs\ReportGenerator\ServiceProvider::class,
+        RealRashid\SweetAlert\SweetAlertServiceProvider::class,
 
     ],
 
@@ -233,6 +234,7 @@ return [
         'PdfReport' => Jimmyjs\ReportGenerator\Facades\PdfReportFacade::class,
         'ExcelReport' => Jimmyjs\ReportGenerator\Facades\ExcelReportFacade::class,
         'CSVReport' => Jimmyjs\ReportGenerator\Facades\CSVReportFacade::class,
+        'Alert' => RealRashid\SweetAlert\Facades\Alert::class,
     ],
 
 ];
