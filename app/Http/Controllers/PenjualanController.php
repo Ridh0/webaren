@@ -4,12 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\Penjualan;
 use App\Models\Keuangan;
+use App\Models\Distributor;
 use App\Models\User;
 use App\Models\Inventori;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
 use Jimmyjs\ReportGenerator\Facades\PdfReportFacade;
 use Jimmyjs\ReportGenerator\Facades\ExcelReportFacade;
+
 class PenjualanController extends Controller
 {
     /**
@@ -31,9 +34,10 @@ class PenjualanController extends Controller
      */
     public function create()
     {
+        $distributor = Distributor::all();
         $pembeli = User::all();
         $penjualan = Penjualan::all();
-        return view('penjualan.create', compact('penjualan','pembeli'));
+        return view('penjualan.create', compact('penjualan', 'pembeli', 'distributor'));
     }
 
     /**
@@ -52,11 +56,11 @@ class PenjualanController extends Controller
             'status' => $request->status,
             'harga' => $request->harga,
             'kode' => $request->kode,
-            'user_id' => $request->user_id,
+            'distributor_id' => $request->distributor_id,
             'tanggal' => $request->tanggal,
             'nama' => $request->nama,
-            'nofaktur' => "F-".$request->nofaktur1."-".$request->nofaktur2,
-            'notagudang' => "G-".$request->notagudang1."-".$request->notagudang2,
+            'nofaktur' => "F-" . $request->nofaktur1 . "-" . $request->nofaktur2,
+            'notagudang' => "G-" . $request->notagudang1 . "-" . $request->notagudang2,
             'harga' => $request->harga,
             'status' => $request->status,
             'gulabatok' => $request->gulabatok,
@@ -139,6 +143,7 @@ class PenjualanController extends Controller
                 'jumlah' => $jumlah,
             ]);
         }
+        Alert::success('Berhasil', 'Berhasil Menghapus Data !');
 
         return back()->with('success', "Data berhasil ditambah");
     }
@@ -154,24 +159,81 @@ class PenjualanController extends Controller
         $penjualans = Penjualan::with('user')->where('id', $penjualan->id)->get();
         return view('penjualan.show', compact('penjualans'));
     }
+    public function rekap_harian()
+    {
+        $today = date('Y-m-d');
+        $penjualan = DB::table('penjualan')
+        ->where('created_at','LIKE','%'.$today.'%')
+            ->select(
+                'distributor_id',
+                DB::raw('count(id)  as id'),
+                DB::raw('SUM(aj)  as total_aj'),
+                DB::raw('SUM(gulabatok)  as total_gulabatok'),
+                DB::raw('SUM(ar25)  as total_ar25'),
+                DB::raw('SUM(ar5)  as total_ar5'),
+                DB::raw('SUM(ar1)  as total_ar1'),
+                DB::raw('SUM(rg5)  as total_rg5'),
+                DB::raw('SUM(rg25)  as total_rg25'),
+                DB::raw('SUM(rg1)  as total_rg1'),
+                DB::raw('SUM(rgk1)  as total_rgk1'),
+                DB::raw('SUM(gsm)  as total_gsm'),
+                DB::raw('SUM(cr)  as total_cr'),
+                DB::raw('SUM(aj)  as total_aj'),
+                DB::raw('SUM(k)  as total_k'),
+                DB::raw('SUM(toi)  as total_toi'),
+            )
+            ->groupBy('distributor_id')
+            ->get();
+        return view('penjualan.rekap', compact('penjualan'));
+    }
+
+    public function rekap_bulanan()
+    {
+
+        $month = date('y-m');
+        $penjualan =  DB::table('penjualan')
+        ->where('created_at','LIKE','%'.$month.'%')
+            ->select(
+                'distributor_id',
+                DB::raw('count(id)  as id'),
+                DB::raw('SUM(aj)  as total_aj'),
+                DB::raw('SUM(gulabatok)  as total_gulabatok'),
+                DB::raw('SUM(ar25)  as total_ar25'),
+                DB::raw('SUM(ar5)  as total_ar5'),
+                DB::raw('SUM(ar1)  as total_ar1'),
+                DB::raw('SUM(rg5)  as total_rg5'),
+                DB::raw('SUM(rg25)  as total_rg25'),
+                DB::raw('SUM(rg1)  as total_rg1'),
+                DB::raw('SUM(rgk1)  as total_rgk1'),
+                DB::raw('SUM(gsm)  as total_gsm'),
+                DB::raw('SUM(cr)  as total_cr'),
+                DB::raw('SUM(aj)  as total_aj'),
+                DB::raw('SUM(k)  as total_k'),
+                DB::raw('SUM(toi)  as total_toi'),
+            )
+            ->groupBy('distributor_id')
+            ->get();
+        return view('penjualan.rekap', compact('penjualan'));
+    }
+
     public function displayReport(Request $request)
     {
         $fromDate = $request->input('from_date');
         $toDate = $request->input('to_date');
         $sortBy = $request->input('sort_by');
-    
-        $title = 'Rekapan Perbulan Bagian Produksi'; // Report title
-    
+
+        $title = 'Rekapan Perbulan Bagian Penjualan'; // Report title
+
         $meta = [ // For displaying filters description on header
             'Pada Tanggal' => $fromDate . ' To ' . $toDate,
         ];
-    
-        $queryBuilder = Penjualan::select(['nwo', 'aj','ar','gp','gt','toi','k','tjawa', 'created_at']) // Do some querying..
-                            ->whereBetween('created_at', [$fromDate, $toDate])
-                            ->orderBy($sortBy);
-    
+
+        $queryBuilder = Penjualan::select(['user_id', 'aj', 'ar', 'gp', 'gt', 'toi', 'k', 'tjawa', 'created_at']) // Do some querying..
+            ->whereBetween('created_at', [$fromDate, $toDate])
+            ->orderBy($sortBy);
+
         $columns = [ // Set Column to be displayed
-            'nwo' => 'nwo',
+            'user_id' => 'user_id',
             'Tanggal', // if no column_name specified, this will automatically seach for snake_case of column name (will be created_at) column from query result
             'Total AJ' => 'aj',
             'Total AR' => 'ar',
@@ -180,33 +242,33 @@ class PenjualanController extends Controller
             'Total TOI' => 'toi',
             'Total K' => 'k',
             'Total TJAWA' => 'tjawa',
-          
+
         ];
-    
+
         // Generate Report with flexibility to manipulate column class even manipulate column value (using Carbon, etc).
         return PdfReportFacade::of($title, $meta, $queryBuilder, $columns)
-                        ->editColumn('Tanggal', [ // Change column class or manipulate its data for displaying to report
-                            'displayAs' => function($result) {
-                                return $result->created_at->format('d M y');
-                            },
-                            'class' => 'left'
-                        ])
-                        ->editColumns(['Total AR','Total TOI','Total K','Total GT','Total GP','Total TJAWA', 'Total TOI','Total AJ'], [ // Mass edit column
-                            'class' => 'right bold'
-                        ])
-                        ->showTotal([ // Used to sum all value on specified column on the last table (except using groupBy method). 'point' is a type for displaying total with a thousand separator
-                            'Total AR' => 'point',
-                            'Total AJ'=>'point',
-                            'Total GP'=> 'point',
-                            'Total GT'=> 'point',
-                            'Total TOI'=> 'point',
-                            'Total K'=> 'point',
-                            'Total TJAWA'=> 'point'
-                            // if you want to show dollar sign ($) then use 'Total Balance' => '$'
-                        ])
-                        ->groupBy('nwo')
-                        ->limit(20) // Limit record to be showed
-                        ->stream(); // other available method: store('path/to/file.pdf') to save to disk, download('filename') to download pdf / make() that will producing DomPDF / SnappyPdf instance so you could do any other DomPDF / snappyPdf method such as stream() or download()
+            ->editColumn('Tanggal', [ // Change column class or manipulate its data for displaying to report
+                'displayAs' => function ($result) {
+                    return $result->created_at->format('d M y');
+                },
+                'class' => 'left'
+            ])
+            ->editColumns(['Total AR', 'Total TOI', 'Total K', 'Total GT', 'Total GP', 'Total TJAWA', 'Total TOI', 'Total AJ'], [ // Mass edit column
+                'class' => 'right bold'
+            ])
+            ->showTotal([ // Used to sum all value on specified column on the last table (except using groupBy method). 'point' is a type for displaying total with a thousand separator
+                'Total AR' => 'point',
+                'Total AJ' => 'point',
+                'Total GP' => 'point',
+                'Total GT' => 'point',
+                'Total TOI' => 'point',
+                'Total K' => 'point',
+                'Total TJAWA' => 'point'
+                // if you want to show dollar sign ($) then use 'Total Balance' => '$'
+            ])
+            ->groupBy('user_id')
+            ->limit(20) // Limit record to be showed
+            ->stream(); // other available method: store('path/to/file.pdf') to save to disk, download('filename') to download pdf / make() that will producing DomPDF / SnappyPdf instance so you could do any other DomPDF / snappyPdf method such as stream() or download()
     }
     /**
      * Show the form for editing the specified resource.
@@ -429,9 +491,9 @@ class PenjualanController extends Controller
      * @param  \App\Models\Penjualan  $penjualan
      * @return \Illuminate\Http\Response
      */
-    public function delete( $penjualan)
+    public function delete($penjualan)
     {
-        
+
         Alert::success('Berhasil', 'Berhasil Menghapus Data !');
         Penjualan::find($penjualan)->delete();
         return back()->with('success', "Data Telah Didelete");

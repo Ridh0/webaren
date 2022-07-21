@@ -5,6 +5,7 @@
 
 
 <div class="container-fluid" id="dynamicAddRemove">
+@include('sweetalert::alert')
 
 
     <h1 class="mt-4">Dashboard</h1>
@@ -45,10 +46,10 @@
                 @csrf
                 <div class="row g-3 mb-2">
                     <div class="col-sm ">
-                        <label for="">No User </label>
-                        <select name="user_id" id="" class="form-select">
-                            @foreach($pembeli as $row)
-                            <option value="{{$row->id}}">{{$row->name}}</option>
+                        <label for="">Distributor </label>
+                        <select name="distributor_id" id="" class="form-select">
+                            @foreach($distributor as $row)
+                            <option value="{{$row->id}}">{{$row->nama}}</option>
                             @endforeach
                         </select>
                     </div>

@@ -15,6 +15,6 @@ protected $table = 'keuangan';
         'jumlah',
         'tanggal',
         'kode',
-        'fd',
+        'keterangan',
     ];
 }

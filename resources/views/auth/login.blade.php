@@ -27,16 +27,7 @@
                 </div>
                 @enderror
             </div>
-            <div class="d-flex mb-5 align-items-center">
-                <label class="control control--checkbox mb-0"><span class="caption">Remember me</span>
-                <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
-                    <div class="control__indicator"></div>
-                </label>
-                @if (Route::has('password.request'))
-                <span class="ml-auto"><a href="{{ route('password.request') }}" class="forgot-pass">Forgot Password</a></span>
-                @endif
-            </div>
-
+           
             <input type="submit" value="Log In" class="btn btn-block btn-primary" />
         </form>
     </div>

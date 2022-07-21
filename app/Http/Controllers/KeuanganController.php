@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Keuangan;
+use App\Models\Distributor;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\DB;
@@ -29,7 +30,8 @@ class KeuanganController extends Controller
      */
     public function create()
     {
-        return view('keuangan.create');
+        $distributor = Distributor::all();
+        return view('keuangan.create', compact('distributor'));
     }
 
     /**
@@ -49,7 +51,7 @@ class KeuanganController extends Controller
             'tanggal' => $request->tanggal,
             'jumlah' => $request->jumlah,
             'kode' => $request->kode,
-            'fd' => $request->fd,
+            'keterangan' => $request->keterangan,
 
         ]);
 
@@ -59,8 +61,10 @@ class KeuanganController extends Controller
     }
     public function rekap_harian()
     {
-        $today = date('Y-m-d');
+        $today = date('y-m-d');
         $a = DB::table('keuangan')
+        ->where('created_at','LIKE','%'.$today.'%')
+        
             ->select('kode', DB::raw('SUM(masuk)  as total_bahan'), DB::raw('SUM(keluar)  as total_kel'))
             ->groupBy('kode')
             ->get();
@@ -71,7 +75,11 @@ class KeuanganController extends Controller
     {
 
         $month = date('y-m');
-        $a =  Keuangan::where('created_at', 'like', "%" . $month . "%")->get();
+        $a =  DB::table('keuangan')
+        ->where('created_at','LIKE','%'.$month.'%')
+            ->select('kode', DB::raw('SUM(masuk)  as total_bahan'), DB::raw('SUM(keluar)  as total_kel'))
+            ->groupBy('kode')
+            ->get();
         return view('keuangan.rekap', compact('a'));
     }
 

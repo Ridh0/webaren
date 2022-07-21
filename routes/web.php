@@ -21,12 +21,12 @@ Route::get('/home', function () {
 });
 
 Auth::routes();
-
-Route::get('/produksi', [App\Http\Controllers\ProduksiController::class, 'index'])->name('produksi');
+Route::group(['middleware' => ['auth']], function() {
+   Route::get('/produksi', [App\Http\Controllers\ProduksiController::class, 'index'])->name('produksi');
 Route::get('/produksi/rekap', [App\Http\Controllers\ProduksiController::class, 'rekap'])->name('produksi.rekaps');
 Route::get('/produksi/hasil/rekap/harian', [App\Http\Controllers\ProduksiController::class, 'rekap_harian_hasil'])->name('produksi.rekap.hasil.harian');
-Route::get('/produksi/rekap/harian', [App\Http\Controllers\ProduksiController::class, 'rekap_harian'])->name('produksi.rekap.harian');
-Route::get('/produksi/rekap/bulanan', [App\Http\Controllers\ProduksiController::class, 'rekap_bulanan'])->name('produksi.rekap.bulanan');
+Route::get('/p/rekap/harian', [App\Http\Controllers\ProduksiController::class, 'rekap_harian'])->name('produksi.rekap.harian');
+Route::get('/p/rekap/bulanan', [App\Http\Controllers\ProduksiController::class, 'rekap_bulanan'])->name('produksi.rekap.bulanan');
 Route::get('/produksi/pdf', [App\Http\Controllers\ProduksiEksportController::class, 'displayReport'])->name('produksi.export.pdf');;
 
 Route::post('/produksi/pos', [App\Http\Controllers\ProduksiController::class, 'pos'])->name('produksis.pos');
@@ -54,14 +54,16 @@ Route::get('/inventori/rekap', [App\Http\Controllers\InventoriController::class,
 Route::get('/inventori/hasil/rekap/harian', [App\Http\Controllers\InventoriController::class, 'rekap_harian_hasil'])->name('inventori.rekap.hasil.harian');
 Route::get('/inventori/rekap/harian', [App\Http\Controllers\InventoriController::class, 'rekap_harian'])->name('inventori.rekap.harian');
 Route::get('/inventori/rekap/bulanan', [App\Http\Controllers\InventoriController::class, 'rekap_bulanan'])->name('inventori.rekap.bulanan');
-Route::get('/inventori/pdf', [App\Http\Controllers\InventoriController::class, 'displayReportexcel'])->name('inventori.export.pdf');;
+Route::get('/inventori/pdf', [App\Http\Controllers\InventoriController::class, 'displayReport'])->name('inventori.export.pdf');;
 
 Route::post('/inventori/pos', [App\Http\Controllers\InventoriController::class, 'pos'])->name('produksis.pos');
 Route::post('/inventori/pos/update', [App\Http\Controllers\InventoriController::class, 'update'])->name('inventori.pos.update');
 Route::post('/inventori/pos/delete', [App\Http\Controllers\InventoriController::class, 'destroy'])->name('inventori.pos.destroy');
 Route::get('/inventori/create', [App\Http\Controllers\InventoriController::class, 'create'])->name('inventori.create');
-Route::get('/inventori/b/keluar', [App\Http\Controllers\InventoriController::class, 'bkeluar'])->name('inventori.keluar');
-Route::get('/inventori/b/masuk', [App\Http\Controllers\InventoriController::class, 'bmasuk'])->name('inventori.masuk');
+Route::get('/i/b/keluar', [App\Http\Controllers\InventoriController::class, 'bkeluar'])->name('inventori.keluar');
+Route::get('/i/b/masuk', [App\Http\Controllers\InventoriController::class, 'bmasuk'])->name('inventori.masuk');
+Route::get('/i/rekap/harian', [App\Http\Controllers\InventoriController::class, 'rekap_harian'])->name('inventori.rekap.harian');
+Route::get('/i/rekap/bulanan', [App\Http\Controllers\InventoriController::class, 'rekap_bulanan'])->name('inventori.rekap.bulanan');
 Route::get('/inventori/bs', [App\Http\Controllers\InventoriController::class, 'tambahbs'])->name('inventori.bs');
 Route::post('/inventori/bs/store', [App\Http\Controllers\InventoriController::class, 'bs'])->name('inventori.storebs');
 Route::get('/inventori/export', [App\Http\Controllers\ProdukExportController::class, 'export'])->name('inventori.export');
@@ -82,6 +84,9 @@ Route::get('/penjualan/edit/b/{penjualan}', [App\Http\Controllers\PenjualanContr
 Route::post('/penjualan/edit/b/update/{penjualan}', [App\Http\Controllers\PenjualanController::class, 'updatebahan'])->name('penjualan.updatebahan');
 Route::get('/penjualan/detail/{penjualan}', [App\Http\Controllers\PenjualanController::class, 'show'])->name('penjualan.show');
 Route::get('/penjualan/create', [App\Http\Controllers\PenjualanController::class, 'create'])->name('penjualan.create');
+Route::get('/penjualan/rekap/harian', [App\Http\Controllers\PenjualanController::class, 'rekap_harian'])->name('penjualan.rekap.harian');
+Route::get('/penjualan/rekap/bulanan', [App\Http\Controllers\PenjualanController::class, 'rekap_bulanan'])->name('penjualan.rekap.bulanan');
+Route::get('/penjualan/pdf', [App\Http\Controllers\PenjualanController::class, 'displayReport'])->name('penjualan.export.pdf');;
 
 Route::get('/keuangan', [App\Http\Controllers\KeuanganController::class, 'index'])->name('keuangan');
 Route::post('/keuangan/store', [App\Http\Controllers\KeuanganController::class, 'store'])->name('keuangan.store');
@@ -93,3 +98,9 @@ Route::get('/keuangan/create', [App\Http\Controllers\KeuanganController::class, 
 Route::get('/keuangan/rekap/harian', [App\Http\Controllers\KeuanganController::class, 'rekap_harian'])->name('keuangan.rekap.harian');
 Route::get('/keuangan/rekap/bulanan', [App\Http\Controllers\KeuanganController::class, 'rekap_bulanan'])->name('keuangan.rekap.bulanan');
 Route::get('/keuangan/pdf', [App\Http\Controllers\KeuanganController::class, 'displayReport'])->name('keuangan.export.pdf');;
+
+Route::get('/distributor', [App\Http\Controllers\DistributorController::class, 'index'])->name('distributor');
+Route::get('/distributor/create', [App\Http\Controllers\DistributorController::class, 'create'])->name('distributor.create');
+Route::post('/distributor/store', [App\Http\Controllers\DistributorController::class, 'store'])->name('distributor.store');
+});
+

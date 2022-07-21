@@ -27,6 +27,11 @@
                         Cetak
                     </a>
                 </div>
+                <div class="p-2 bd-highlight">
+                    <a class="btn btn-primary btn-sm" data-bs-toggle="collapse" href="#collapseExamples" role="button" aria-expanded="false" aria-controls="collapseExamples">
+                        Tambah Distributor
+                    </a>
+                </div>
             </div>
 
         </div>
@@ -48,6 +53,26 @@
                                 <label class="sr-only" for="inlineFormInputGroupUsername">Produksi</label>
                                 <div class="input-group">
                                     <input type="date" name="to_date" class="form-control" id="inlineFormInputGroupUsername" placeholder="Username">
+                                </div>
+                            </div>
+                            <div class="col-auto my-1 pt-3 mt-2">
+
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="collapse" id="collapseExamples">
+                <div class="card card-body mb-3">
+                    <form action="{{ route('distributor.store') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="sort_by" value="id">
+                        <div class="row align-items-center justify-content-end">
+                            <div class="col-sm my-1">
+                                <label for="formGroupExampleInput">Tambah Distributor</label>
+                                <div class="input-group">
+                                    <input class="form-control" name="nama" type="text" required>
                                 </div>
                             </div>
                             <div class="col-auto my-1 pt-3 mt-2">

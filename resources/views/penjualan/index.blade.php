@@ -27,6 +27,11 @@
                         Cetak
                     </a>
                 </div>
+                <div class="p-2 bd-highlight">
+                    <a class="btn btn-primary btn-sm" data-bs-toggle="collapse" href="#collapseExamples" role="button" aria-expanded="false" aria-controls="collapseExamples">
+                        Tambah Distributor
+                    </a>
+                </div>
             </div>
 
         </div>
@@ -48,6 +53,26 @@
                                 <label class="sr-only" for="inlineFormInputGroupUsername">Produksi</label>
                                 <div class="input-group">
                                     <input type="date" name="to_date" class="form-control" id="inlineFormInputGroupUsername" placeholder="Username">
+                                </div>
+                            </div>
+                            <div class="col-auto my-1 pt-3 mt-2">
+
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="collapse" id="collapseExamples">
+                <div class="card card-body mb-3">
+                    <form action="{{ route('distributor.store') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="sort_by" value="id">
+                        <div class="row align-items-center justify-content-end">
+                            <div class="col-sm my-1">
+                                <label for="formGroupExampleInput">Tambah Distributor</label>
+                                <div class="input-group">
+                                    <input class="form-control" name="nama" type="text" required>
                                 </div>
                             </div>
                             <div class="col-auto my-1 pt-3 mt-2">
@@ -88,7 +113,7 @@
                             <div class="d-flex justify-content-around">
                                 <a href="{{route('penjualan.show',$row->id)}}" class="btn btn-primary btn-sm ">Detail</a>
                                 <a href="{{route('penjualan.editbahan',$row->id)}}" class="btn btn-warning btn-sm ">Edit</a>
-                               
+
                                 <form method="POST" action="{{ route('penjualan.delete', $row->id) }}">
                                     @csrf
                                     <button type="submit" class="btn btn-xs btn-danger btn-flat show_confirm" data-toggle="tooltip" title='Delete'>Delete</button>
@@ -108,25 +133,25 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 
 <script>
-    $(document).ready( function () {
-    $('#table_id').DataTable();
-} );
+    $(document).ready(function() {
+        $('#table_id').DataTable();
+    });
 </script>
 <script>
-     $('.delete-confirm').on('click', function (event) {
-      event.preventDefault();
-      const url = $(this).attr('href');
-      swal({
-          title: 'Are you sure?',
-          text: 'This record and it`s details will be permanantly deleted!',
-          icon: 'warning',
-          buttons: ["Cancel", "Yes!"],
-          }).then(function(value) {
-          if (value) {
-          window.location.href = url;
-        }
-      });
-     });
+    $('.delete-confirm').on('click', function(event) {
+        event.preventDefault();
+        const url = $(this).attr('href');
+        swal({
+            title: 'Are you sure?',
+            text: 'This record and it`s details will be permanantly deleted!',
+            icon: 'warning',
+            buttons: ["Cancel", "Yes!"],
+        }).then(function(value) {
+            if (value) {
+                window.location.href = url;
+            }
+        });
+    });
 </script>
 <script type="text/javascript">
     $('.show_confirm').click(function(event) {

@@ -12,7 +12,7 @@ class Penjualan extends Model
     protected $table = 'penjualan';
     protected $fillable = 
     [
-        'user_id',
+        'distributor_id',
         'id_user',
         'tanggal',
         'nama',
@@ -36,7 +36,7 @@ class Penjualan extends Model
         'toi',
     ];
 
-    public function user(){
-        return $this->belongsTo(User::class);
+    public function distributor(){
+        return $this->belongsTo(Distributor::class);
     }
 }

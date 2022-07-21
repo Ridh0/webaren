@@ -61,9 +61,10 @@
                 <thead>
                     <tr class="table bg-dark text-white">
                         <th scope="col">Urutan Masak</th>
-                        <th scope="col">kode</th>
+                        <th scope="col">Kode</th>
                         <th scope="col">Jumlah Uang Masuk <small>(Rp)</small></th>
                         <th scope="col">Jumlah Uang Keluar <small>(Rp)</small></th>
+                        <th scope="col">Saldo</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -87,6 +88,7 @@
                         @endif</td>
                         <td>{{ rupiah($row->total_bahan) }}</td>
                         <td>{{ rupiah($row->total_kel) }}</td>
+                        <td>{{ rupiah($row->total_bahan - $row->total_kel ) }}</td>
                     </tr>
                     @endforeach
                 </tbody>

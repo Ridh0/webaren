@@ -47,12 +47,12 @@
             <div class="card-body">
                 <div class="row g-3 mb-2 ">
                     <div class="col-sm-12">
-                    <label for="">Tanggal </label>
+                        <label for="">Tanggal </label>
 
-<input class="date form-control" name="tanggal" type="text">
+                        <input class="date form-control" name="tanggal" type="text" required>
                     </div>
                     <div class="col-sm-12 ">
-                        
+
 
                         <label for="">Jumlah Uang Masuk </label>
 
@@ -64,18 +64,25 @@
                     </div>
                     <div class="col-sm-12 ">
                         <label for="">Kode</label>
-                        <select name="kode" class="form-select" id="">
+                        <select name="kode" class="form-select" id="" required>
                             <optgroup label="Sumber Dana">
-                                <option value="1">Kas</option>
-                                <option value="2">Pribadi</option>
+                                <option value="1">AM</option>
+                                <option value="2">FD</option>
+                                <option value="3">DW</option>
                             </optgroup>
                         </select>
                     </div>
                     <div class="col-sm-12 ">
-                        <label for="">FD</label>
-                        <select name="fd" class="form-select" id="">
-                            <option value="1">Hutang</option>
-                            <option value="2">Lunas</option>
+                        <label for="">Uraian</label>
+                        <textarea name="keterangan" class="form-control" id="" cols="10" rows="10" required></textarea>
+
+                    </div>
+                    <div class="col-sm ">
+                        <label for="">Distributor </label>
+                        <select name="distributor_id" id="" class="form-select">
+                            @foreach($distributor as $row)
+                            <option value="{{$row->id}}">{{$row->nama}}</option>
+                            @endforeach
                         </select>
                     </div>
 

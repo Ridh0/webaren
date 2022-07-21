@@ -139,9 +139,27 @@ class ProduksiController extends Controller
     {
         $today = date('Y-m-d');
         $a = DB::table('produksi')
-            ->select('nwo', DB::raw('SUM(jmlbahan) as total_bahan'))
-            ->groupBy('nwo')
-            ->havingRaw('SUM(jmlbahan) > ?', [2])
+            ->select(
+                DB::raw('date(m, strtotime(created_at))'),
+                DB::raw('count(id)  as id'),
+                DB::raw('SUM(tjawa)  as total_tjawa'),
+                DB::raw('SUM(ar25)  as total_ar25'),
+                DB::raw('SUM(ar5)  as total_ar5'),
+                DB::raw('SUM(ar1)  as total_ar1'),
+                DB::raw('SUM(rg5)  as total_rg5'),
+                DB::raw('SUM(rg25)  as total_rg25'),
+                DB::raw('SUM(rg1)  as total_rg1'),
+                DB::raw('SUM(rgk1)  as total_rgk1'),
+                DB::raw('SUM(gp)  as total_gp'),
+                DB::raw('SUM(gt)  as total_gt'),
+                DB::raw('SUM(aj)  as total_aj'),
+                DB::raw('SUM(ar)  as total_ar'),
+                DB::raw('SUM(k)  as total_k'),
+                DB::raw('SUM(toi)  as total_toi'),
+                DB::raw('SUM(total)  as total_hasil'),
+                DB::raw('SUM(jmlbahan)  as total_bahan')
+            )
+            ->groupBy('date')
             ->get();
         return view('produksi.rekap', compact('a'));
     }
@@ -169,8 +187,30 @@ class ProduksiController extends Controller
     public function rekap_bulanan()
     {
 
-        $month = date('F, Y');
-        $a =  Produksi_Detail::where('created_at', 'like', "%" . $month . "%")->with('produksi')->with('inventori')->get();
+        $month = date('y-m');
+        $a =  DB::table('produksi')
+            ->select(
+                DB::raw('DATE(created_at) as date'),
+                DB::raw('count(id)  as id'),
+                DB::raw('SUM(tjawa)  as total_tjawa'),
+                DB::raw('SUM(ar25)  as total_ar25'),
+                DB::raw('SUM(ar5)  as total_ar5'),
+                DB::raw('SUM(ar1)  as total_ar1'),
+                DB::raw('SUM(rg5)  as total_rg5'),
+                DB::raw('SUM(rg25)  as total_rg25'),
+                DB::raw('SUM(rg1)  as total_rg1'),
+                DB::raw('SUM(rgk1)  as total_rgk1'),
+                DB::raw('SUM(gp)  as total_gp'),
+                DB::raw('SUM(gt)  as total_gt'),
+                DB::raw('SUM(aj)  as total_aj'),
+                DB::raw('SUM(ar)  as total_ar'),
+                DB::raw('SUM(k)  as total_k'),
+                DB::raw('SUM(toi)  as total_toi'),
+                DB::raw('SUM(total)  as total_hasil'),
+                DB::raw('SUM(jmlbahan)  as total_bahan')
+            )
+            ->groupBy('date')
+            ->get();
         return view('produksi.rekap', compact('a'));
     }
 
