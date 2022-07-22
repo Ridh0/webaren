@@ -55,6 +55,8 @@ Route::get('/inventori/hasil/rekap/harian', [App\Http\Controllers\InventoriContr
 Route::get('/inventori/rekap/harian', [App\Http\Controllers\InventoriController::class, 'rekap_harian'])->name('inventori.rekap.harian');
 Route::get('/inventori/rekap/bulanan', [App\Http\Controllers\InventoriController::class, 'rekap_bulanan'])->name('inventori.rekap.bulanan');
 Route::get('/inventori/pdf', [App\Http\Controllers\InventoriController::class, 'displayReport'])->name('inventori.export.pdf');;
+Route::get('/inventori/pdf/h', [App\Http\Controllers\InventoriController::class, 'displayReportharian'])->name('inventori.export.pdf.harian');;
+Route::get('/inventori/pdf/b', [App\Http\Controllers\InventoriController::class, 'displayReportbulanan'])->name('inventori.export.pdf.bulanan');;
 
 Route::post('/inventori/pos', [App\Http\Controllers\InventoriController::class, 'pos'])->name('produksis.pos');
 Route::post('/inventori/pos/update', [App\Http\Controllers\InventoriController::class, 'update'])->name('inventori.pos.update');

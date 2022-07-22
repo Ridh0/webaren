@@ -24,6 +24,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        config(['app.locale' => 'id']);
+        \Carbon\Carbon::setLocale('id');
         Paginator::defaultView('vendor.pagination.bootstrap-4');
 
         Paginator::defaultSimpleView('simple-pagination');

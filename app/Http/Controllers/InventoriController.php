@@ -71,7 +71,7 @@ class InventoriController extends Controller
     public function rekap_harian()
     {
         $today = date('Y-m-d');
-        $a = DB::table('inventori_keluar_masuk')
+        $keluar = DB::table('inventori_keluar_masuk')
             ->where('keterangan', 'Keluar')
             ->select(
                 DB::raw('DATE(created_at) as date'),
@@ -88,18 +88,93 @@ class InventoriController extends Controller
                 DB::raw('SUM(gt)  as total_gt'),
                 DB::raw('SUM(aj)  as total_aj'),
                 DB::raw('SUM(ar)  as total_ar'),
-                DB::raw('SUM(k)  as total_k')
+                DB::raw('SUM(k)  as total_k'),
+                DB::raw('SUM(jmlhasil)  as total_hasil'),
+                DB::raw('SUM(jmlbahan)  as total_bahan')
             )
             ->groupBy('date')
             ->get();
-        return view('inventori.rekap', compact('a'));
+
+        $masuk = DB::table('inventori_keluar_masuk')
+            ->where('keterangan', 'Masuk')
+            ->select(
+                DB::raw('DATE(created_at) as date'),
+                DB::raw('count(id)  as id'),
+                DB::raw('SUM(tjawa)  as total_tjawa'),
+                DB::raw('SUM(ar25)  as total_ar25'),
+                DB::raw('SUM(ar5)  as total_ar5'),
+                DB::raw('SUM(ar1)  as total_ar1'),
+                DB::raw('SUM(rg5)  as total_rg5'),
+                DB::raw('SUM(rg25)  as total_rg25'),
+                DB::raw('SUM(rg1)  as total_rg1'),
+                DB::raw('SUM(rgk1)  as total_rgk1'),
+                DB::raw('SUM(gp)  as total_gp'),
+                DB::raw('SUM(gt)  as total_gt'),
+                DB::raw('SUM(aj)  as total_aj'),
+                DB::raw('SUM(ar)  as total_ar'),
+                DB::raw('SUM(k)  as total_k'),
+                DB::raw('SUM(jmlhasil)  as total_hasil'),
+                DB::raw('SUM(jmlbahan)  as total_bahan')
+            )
+            ->groupBy('date')
+            ->get();
+        return view('inventori.rekap', compact('masuk', 'keluar'));
     }
     public function rekap_bulanan()
     {
 
-        $month = date('F, Y');
-        $a =  Produksi_Detail::where('created_at', 'like', "%" . $month . "%")->with('produksi')->with('inventori')->get();
-        return view('inventori.rekap', compact('a'));
+        setlocale(LC_ALL, 'IND');
+        DB::statement("SET lc_time_names = 'id_ID';");
+        $month = date('y-m');
+        $keluar = DB::table('inventori_keluar_masuk')
+            ->where('keterangan', 'Keluar')
+            ->select(
+                DB::raw('monthname(created_at) as date'),
+                DB::raw('count(id)  as id'),
+                DB::raw('SUM(tjawa)  as total_tjawa'),
+                DB::raw('SUM(ar25)  as total_ar25'),
+                DB::raw('SUM(ar5)  as total_ar5'),
+                DB::raw('SUM(ar1)  as total_ar1'),
+                DB::raw('SUM(rg5)  as total_rg5'),
+                DB::raw('SUM(rg25)  as total_rg25'),
+                DB::raw('SUM(rg1)  as total_rg1'),
+                DB::raw('SUM(rgk1)  as total_rgk1'),
+                DB::raw('SUM(gp)  as total_gp'),
+                DB::raw('SUM(gt)  as total_gt'),
+                DB::raw('SUM(aj)  as total_aj'),
+                DB::raw('SUM(ar)  as total_ar'),
+                DB::raw('SUM(k)  as total_k'),
+                DB::raw('SUM(jmlhasil)  as total_hasil'),
+                DB::raw('SUM(jmlbahan)  as total_bahan')
+            )
+            ->groupBy('date')
+            ->get();
+        $masuk = DB::table('inventori_keluar_masuk')
+            ->where('keterangan', 'Masuk')
+            ->select(
+                DB::raw('monthname(created_at) as date'),
+                DB::raw('count(id)  as id'),
+                DB::raw('SUM(tjawa)  as total_tjawa'),
+                DB::raw('SUM(ar25)  as total_ar25'),
+                DB::raw('SUM(ar5)  as total_ar5'),
+                DB::raw('SUM(ar1)  as total_ar1'),
+                DB::raw('SUM(rg5)  as total_rg5'),
+                DB::raw('SUM(rg25)  as total_rg25'),
+                DB::raw('SUM(rg1)  as total_rg1'),
+                DB::raw('SUM(rgk1)  as total_rgk1'),
+                DB::raw('SUM(gp)  as total_gp'),
+                DB::raw('SUM(gt)  as total_gt'),
+                DB::raw('SUM(aj)  as total_aj'),
+                DB::raw('SUM(ar)  as total_ar'),
+                DB::raw('SUM(k)  as total_k'),
+                DB::raw('SUM(toi)  as total_toi'),
+                DB::raw('SUM(jmlhasil)  as total_hasil'),
+                DB::raw('SUM(jmlbahan)  as total_bahan')
+            )
+            ->groupBy('date')
+            ->get();
+
+        return view('inventori.rekap', compact('masuk', 'keluar'));
     }
     /**
      * Store a newly created resource in storage.
@@ -113,6 +188,7 @@ class InventoriController extends Controller
         $toDate = $request->input('to_date');
         $sortBy = $request->input('sort_by');
         $jenis = $request->input('jenis');
+        $jangkawaktu = $request->input('jangkawaktu');
 
         $title = 'Rekapan Perbulan Bagian Inventori'; // Report title
 
@@ -120,29 +196,34 @@ class InventoriController extends Controller
             'Pada Tanggal' => $fromDate . ' To ' . $toDate,
         ];
         if ($jenis == 1) {
-
-            $queryBuilder = Inventori_Detail::select(['aj', 'ar', 'gp', 'gt', 'toi', 'k', 'tjawa', 'created_at']) // Do some querying..
+            $queryBuilder = Inventori_Detail::select([DB::raw('SUM(aj)  as taj'), DB::raw('SUM(ar)  as ar'), DB::raw('SUM(gp)  as gp'), DB::raw('SUM(gt)  as gt'), DB::raw('SUM(toi)  as toi'), DB::raw('SUM(k)  as k'), DB::raw('SUM(tjawa)  as tjawa'),  $tgl]) // Do some querying..
                 ->whereBetween('created_at', [$fromDate, $toDate])
-                ->orderBy('created_at');
+                ->groupBy('created_at')
+                ->orderBy('created_at', 'desc');
 
-                $columns = [ // Set Column to be displayed
-                    'Tanggal', // if no column_name specified, this will automatically seach for snake_case of column name (will be created_at) column from query result
-                    'Total AJ' => 'aj',
-                    'Total AR' => 'ar',
-                    'Total GP' => 'gp',
-                    'Total GT' => 'gt',
-                    'Total TOI' => 'toi',
-                    'Total K' => 'k',
-                    'Total TJAWA' => 'tjawa',
-    
-                ];
+            $columns = [ // Set Column to be displayed
+                'Tanggal' => 'created_at', // if no column_name specified, this will automatically seach for snake_case of column name (will be created_at) column from query result
+                'Total AJ' => 'taj',
+                'Total AR' => 'ar',
+                'Total GP' => 'gp',
+                'Total GT' => 'gt',
+                'Total TOI' => 'toi',
+                'Total K' => 'k',
+                'Total TJAWA' => 'tjawa',
+
+            ];
             // Generate Report with flexibility to manipulate column class even manipulate column value (using Carbon, etc).
             return PdfReportFacade::of($title, $meta, $queryBuilder, $columns)
                 ->editColumn('Tanggal', [ // Change column class or manipulate its data for displaying to report
                     'displayAs' => function ($result) {
-                        return $result->created_at->format('d M y');
+                        return $result->created_at->isoFormat('d MMMM Y');
                     },
                     'class' => 'left'
+                ])
+                ->editColumns([
+                    'Tanggal'
+                ], [ // Mass edit column
+                    'class' => 'center bold'
                 ])
                 ->editColumns([
                     'Total AJ',
@@ -173,7 +254,7 @@ class InventoriController extends Controller
             $queryBuilder = Inventori_Detail::select(['cr', 'gsm', 'ar25', 'ar5', 'ar1', 'rg25', 'rg5', 'rg1', 'rgk1', 'bs', 'created_at']) // Do some querying..
                 ->whereBetween('created_at', [$fromDate, $toDate])
                 ->orderBy($sortBy);
-            
+
             $columns = [ // Set Column to be displayed
                 'Tanggal', // if no column_name specified, this will automatically seach for snake_case of column name (will be created_at) column from query result
                 'Total CR' => 'cr',
@@ -209,7 +290,280 @@ class InventoriController extends Controller
                     'Total RG1',
                     'Total RGk1',
                     'Total BS',
-                    'Total TJAWA', 
+                    'Total TJAWA',
+                ], [ // Mass edit column
+                    'class' => 'right bold'
+                ])
+                ->showTotal([ // Used to sum all value on specified column on the last table (except using groupBy method). 'point' is a type for displaying total with a thousand separator
+                    'Total CR' => 'point',
+                    'Total GSM' => 'point',
+                    'Total AR25' => 'point',
+                    'Total AR5' => 'point',
+                    'Total AR1' => 'point',
+                    'Total RG25' => 'point',
+                    'Total RG5' => 'point',
+                    'Total RG1' => 'point',
+                    'Total RGk1' => 'point',
+                    'Total BS' => 'point',
+                    'Total TJAWA' => 'point',
+                    // if you want to show dollar sign ($) then use 'Total Balance' => '$'
+                ])
+                ->groupBy('Tanggal')
+                ->limit(20) // Limit record to be showed
+                ->stream(); // other available method: store('path/to/file.pdf') to save to disk, download('filename') to download pdf / make() that will producing DomPDF / SnappyPdf instance so you could do any other DomPDF / snappyPdf method such as stream() or download()
+
+        }
+    }
+    public function displayReportharian(Request $request)
+    {
+        $fromDate = $request->input('from_date');
+        $toDate = $request->input('to_date');
+        $sortBy = $request->input('sort_by');
+        $jenis = $request->input('jenis');
+        $barang = $request->input('keterangan');
+
+        $title = 'Rekapan Perhari Bagian Inventori'; // Report title
+
+        $meta = [ // For displaying filters description on header
+            'Pada Tanggal' => $fromDate . ' To ' . $toDate,
+        ];
+        if ($jenis == 1) {
+            $queryBuilder = Inventori_Detail::select([DB::raw('SUM(aj)  as taj'), DB::raw('SUM(ar)  as ar'), DB::raw('SUM(gp)  as gp'), DB::raw('SUM(gt)  as gt'), DB::raw('SUM(toi)  as toi'), DB::raw('SUM(k)  as k'), DB::raw('SUM(tjawa)  as tjawa'), DB::raw('DATE(created_at)  as created_at')]) // Do some querying..
+                ->where('keterangan', $barang)
+                ->whereBetween('created_at', [$fromDate, $toDate])
+                ->groupBy('created_at')
+                ->orderBy('created_at', 'asc');
+
+            $columns = [ // Set Column to be displayed
+                'Tanggal' => 'created_at', // if no column_name specified, this will automatically seach for snake_case of column name (will be created_at) column from query result
+                'Total AJ' => 'taj',
+                'Total AR' => 'ar',
+                'Total GP' => 'gp',
+                'Total GT' => 'gt',
+                'Total TOI' => 'toi',
+                'Total K' => 'k',
+                'Total TJAWA' => 'tjawa',
+
+            ];
+            // Generate Report with flexibility to manipulate column class even manipulate column value (using Carbon, etc).
+            return PdfReportFacade::of($title, $meta, $queryBuilder, $columns)
+                ->setOrientation('landscape')
+
+                ->editColumn('Tanggal', [ // Change column class or manipulate its data for displaying to report
+                    'displayAs' => function ($result) {
+                        return $result->created_at->isoFormat('d MMMM Y');
+                    },
+                    'class' => 'left'
+                ])
+                ->editColumns([
+                    'Tanggal'
+                ], [ // Mass edit column
+                    'class' => 'center bold'
+                ])
+                ->editColumns([
+                    'Total AJ',
+                    'Total AR',
+                    'Total GP',
+                    'Total GT',
+                    'Total TOI',
+                    'Total K',
+                    'Total TJAWA'
+                ], [ // Mass edit column
+                    'class' => 'right bold'
+                ])
+                ->showTotal([ // Used to sum all value on specified column on the last table (except using groupBy method). 'point' is a type for displaying total with a thousand separator
+                    'Total AJ' => 'point',
+                    'Total AR' => 'point',
+                    'Total GP' => 'point',
+                    'Total GT' => 'point',
+                    'Total TOI' => 'point',
+                    'Total K' => 'point',
+                    'Total TJAWA' => 'point'
+                    // if you want to show dollar sign ($) then use 'Total Balance' => '$'
+                ])
+                ->groupBy('Tanggal')
+                ->limit(20) // Limit record to be showed
+                ->stream(); // other available method: store('path/to/file.pdf') to save to disk, download('filename') to download pdf / make() that will producing DomPDF / SnappyPdf instance so you could do any other DomPDF / snappyPdf method such as stream() or download()
+
+        } else {
+            $queryBuilder = Inventori_Detail::select(['cr', 'gsm', 'ar25', 'ar5', 'ar1', 'rg25', 'rg5', 'rg1', 'rgk1', 'bs', 'created_at']) // Do some querying..
+                ->setOrientation('landscape')
+
+                ->where('keterangan', $barang)
+                ->whereBetween('created_at', [$fromDate, $toDate])
+                ->orderBy('created_at', 'asc');
+
+            $columns = [ // Set Column to be displayed
+                'Tanggal' => 'created_at', // if no column_name specified, this will automatically seach for snake_case of column name (will be created_at) column from query result
+                'Total CR' => 'cr',
+                'Total GSM' => 'gsm',
+                'Total AR25' => 'ar25',
+                'Total AR5' => 'ar5',
+                'Total AR1' => 'ar1',
+                'Total RG25' => 'rg25',
+                'Total RG5' => 'rg5',
+                'Total RG1' => 'rg1',
+                'Total RGk1' => 'rgk1',
+                'Total BS' => 'bs',
+                'Total TJAWA' => 'tjawa',
+
+            ];
+            // Generate Report with flexibility to manipulate column class even manipulate column value (using Carbon, etc).
+            return PdfReportFacade::of($title, $meta, $queryBuilder, $columns)
+                ->editColumn('Tanggal', [ // Change column class or manipulate its data for displaying to report
+                    'displayAs' => function ($result) {
+                        return $result->created_at->format('d M y');
+                    },
+                    'class' => 'left'
+                ])
+                ->editColumns([
+                    'Tanggal', // if no column_name specified, this will automatically seach for snake_case of column name (will be created_at) column from query result
+                    'Total CR',
+                    'Total GSM',
+                    'Total AR25',
+                    'Total AR5',
+                    'Total AR1',
+                    'Total RG25',
+                    'Total RG5',
+                    'Total RG1',
+                    'Total RGk1',
+                    'Total BS',
+                    'Total TJAWA',
+                ], [ // Mass edit column
+                    'class' => 'right bold'
+                ])
+                ->showTotal([ // Used to sum all value on specified column on the last table (except using groupBy method). 'point' is a type for displaying total with a thousand separator
+                    'Total CR' => 'point',
+                    'Total GSM' => 'point',
+                    'Total AR25' => 'point',
+                    'Total AR5' => 'point',
+                    'Total AR1' => 'point',
+                    'Total RG25' => 'point',
+                    'Total RG5' => 'point',
+                    'Total RG1' => 'point',
+                    'Total RGk1' => 'point',
+                    'Total BS' => 'point',
+                    'Total TJAWA' => 'point',
+                    // if you want to show dollar sign ($) then use 'Total Balance' => '$'
+                ])
+                ->groupBy('Tanggal')
+                ->limit(20) // Limit record to be showed
+                ->stream(); // other available method: store('path/to/file.pdf') to save to disk, download('filename') to download pdf / make() that will producing DomPDF / SnappyPdf instance so you could do any other DomPDF / snappyPdf method such as stream() or download()
+
+        }
+    }
+    public function displayReportbulanan(Request $request)
+    {
+        $fromDate = $request->input('from_date');
+        $toDate = $request->input('to_date');
+        $sortBy = $request->input('sort_by');
+        $jenis = $request->input('jenis');
+        $jangkawaktu = $request->input('jangkawaktu');
+
+        $title = 'Rekapan Perbulan Bagian Inventori'; // Report title
+
+        $meta = [ // For displaying filters description on header
+            'Pada Tanggal' => $fromDate . ' To ' . $toDate,
+        ];
+        if ($jenis == 1) {
+            $queryBuilder = Inventori_Detail::select([DB::raw('SUM(aj)  as taj'), DB::raw('SUM(ar)  as ar'), DB::raw('SUM(gp)  as gp'), DB::raw('SUM(gt)  as gt'), DB::raw('SUM(toi)  as toi'), DB::raw('SUM(k)  as k'), DB::raw('SUM(tjawa)  as tjawa'), DB::raw('monthname(created_at)  as created_at')]) // Do some querying..
+                ->whereBetween('created_at', [$fromDate, $toDate])
+                ->groupBy('created_at')
+                ->orderBy('created_at', 'desc');
+
+            $columns = [ // Set Column to be displayed
+                'Tanggal' => 'created_at', // if no column_name specified, this will automatically seach for snake_case of column name (will be created_at) column from query result
+                'Total AJ' => 'taj',
+                'Total AR' => 'ar',
+                'Total GP' => 'gp',
+                'Total GT' => 'gt',
+                'Total TOI' => 'toi',
+                'Total K' => 'k',
+                'Total TJAWA' => 'tjawa',
+
+            ];
+            // Generate Report with flexibility to manipulate column class even manipulate column value (using Carbon, etc).
+            return PdfReportFacade::of($title, $meta, $queryBuilder, $columns)
+                ->setOrientation('landscape')
+
+                ->editColumn('Tanggal', [ // Change column class or manipulate its data for displaying to report
+                    'displayAs' => function ($result) {
+                        return $result->created_at->isoFormat('MMMM');
+                    },
+                    'class' => 'left'
+                ])
+                ->editColumns([
+                    'Tanggal'
+                ], [ // Mass edit column
+                    'class' => 'center bold'
+                ])
+                ->editColumns([
+                    'Total AJ',
+                    'Total AR',
+                    'Total GP',
+                    'Total GT',
+                    'Total TOI',
+                    'Total K',
+                    'Total TJAWA'
+                ], [ // Mass edit column
+                    'class' => 'right bold'
+                ])
+                ->showTotal([ // Used to sum all value on specified column on the last table (except using groupBy method). 'point' is a type for displaying total with a thousand separator
+                    'Total AJ' => 'point',
+                    'Total AR' => 'point',
+                    'Total GP' => 'point',
+                    'Total GT' => 'point',
+                    'Total TOI' => 'point',
+                    'Total K' => 'point',
+                    'Total TJAWA' => 'point'
+                    // if you want to show dollar sign ($) then use 'Total Balance' => '$'
+                ])
+                ->groupBy('Tanggal')
+                ->limit(20) // Limit record to be showed
+                ->stream(); // other available method: store('path/to/file.pdf') to save to disk, download('filename') to download pdf / make() that will producing DomPDF / SnappyPdf instance so you could do any other DomPDF / snappyPdf method such as stream() or download()
+
+        } else {
+            $queryBuilder = Inventori_Detail::select(['cr', 'gsm', 'ar25', 'ar5', 'ar1', 'rg25', 'rg5', 'rg1', 'rgk1', 'bs', DB::raw('monthname(created_at)  as created_at')]) // Do some querying..
+                ->setOrientation('landscape')
+                ->whereBetween('created_at', [$fromDate, $toDate])
+                ->orderBy('created_at', 'desc');
+
+            $columns = [ // Set Column to be displayed
+                'Tanggal' => 'created_at', // if no column_name specified, this will automatically seach for snake_case of column name (will be created_at) column from query result
+                'Total CR' => 'cr',
+                'Total GSM' => 'gsm',
+                'Total AR25' => 'ar25',
+                'Total AR5' => 'ar5',
+                'Total AR1' => 'ar1',
+                'Total RG25' => 'rg25',
+                'Total RG5' => 'rg5',
+                'Total RG1' => 'rg1',
+                'Total RGk1' => 'rgk1',
+                'Total BS' => 'bs',
+                'Total TJAWA' => 'tjawa',
+
+            ];
+            // Generate Report with flexibility to manipulate column class even manipulate column value (using Carbon, etc).
+            return PdfReportFacade::of($title, $meta, $queryBuilder, $columns)
+                ->editColumn('Tanggal', [ // Change column class or manipulate its data for displaying to report
+                    'displayAs' => function ($result) {
+                        return $result->created_at->isoFormat('MMMM');
+                    },
+                    'class' => 'left'
+                ])
+                ->editColumns([
+                    'Tanggal', // if no column_name specified, this will automatically seach for snake_case of column name (will be created_at) column from query result
+                    'Total CR',
+                    'Total GSM',
+                    'Total AR25',
+                    'Total AR5',
+                    'Total AR1',
+                    'Total RG25',
+                    'Total RG5',
+                    'Total RG1',
+                    'Total RGk1',
+                    'Total BS',
+                    'Total TJAWA',
                 ], [ // Mass edit column
                     'class' => 'right bold'
                 ])
